@@ -1,0 +1,64 @@
+<template>
+  <div id="app" v-bind:class="{'disconnected': !$store.state.socket.isConnected}"  >
+    <Header/>
+    <InterfaceCLI/>
+    <Footer/>
+  </div>
+</template>
+
+<script>
+import Header from "./components/Header";
+import InterfaceCLI from "./components/InterfaceCLI";
+import Footer from "./components/Footer";
+
+export default {
+  name: "App",
+  data() {
+    return {};
+  },
+  components: {
+    Header,
+    InterfaceCLI,
+    Footer
+  }
+};
+</script>
+
+<style>
+body {
+  margin: 0;
+  padding: 0;
+}
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  margin: 0 auto;
+  padding: 0;
+  color: #fff;
+  background: #162c41db;
+  display: block;
+  height: 100vh;
+  width: 100vw;
+}
+.disconnected {
+  color: #ce5050 !important;
+  background: #505050 !important;
+}
+/* .disconnected:body {
+  content: "Disconnected"; 
+  font-size: 10em;  
+  color: rgba(214, 52, 52, 0.4);
+  z-index: 9999;
+ 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+} */
+</style>
