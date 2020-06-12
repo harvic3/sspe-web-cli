@@ -1,8 +1,8 @@
 <template>
-  <div id="app" v-bind:class="{'disconnected': !$store.state.socket.isConnected}"  >
-    <Header/>
-    <InterfaceCLI/>
-    <Footer/>
+  <div id="app" v-bind:class="{'disconnected': !$store.state.socket.isConnected}">
+    <Header />
+    <InterfaceCLI />
+    <Footer />
   </div>
 </template>
 
@@ -25,6 +25,19 @@ export default {
 </script>
 
 <style>
+@media only screen and (max-width: 768px) {
+  h1 {
+    font-size: 40px !important;
+  }
+  #terminal {
+    max-width: 90%!important;
+  }
+  .command{
+    height: 26px!important;
+    font-size: 13px!important;
+  }
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -46,7 +59,7 @@ body {
   color: #ce5050 !important;
   background: #505050 !important;
 }
-/* .disconnected:body {
+.disconnected:body {
   content: "Disconnected"; 
   font-size: 10em;  
   color: rgba(214, 52, 52, 0.4);
@@ -60,5 +73,6 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-} */
+}
 </style>
+

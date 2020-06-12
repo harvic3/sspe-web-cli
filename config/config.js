@@ -1,7 +1,7 @@
 const config = {
-  env: process.env || 'DEV',
+  env: process.env.ENV || 'DEV',
   DEV_SERVICE: "http://localhost:3030",
-  PROD_SERVICE: "sspe-project-api.vickodev.now.sh"
+  PROD_SERVICE: "http://sspeapi.devspace.ml"
 };
 
 exports.config = config;

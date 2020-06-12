@@ -10,7 +10,7 @@ Vue.use(VueSocketio, io(store.state.wsUrl,
       "websocket"
     ],
     path: "/stomp"
-  }),
+  }).disconnect(),
   {
     store: store,
   }

@@ -75,7 +75,7 @@ export default {
     sendBySocket(command) {
       let options = command.replace("  ", " ");
       options = options.split(" ");
-      this.$socket.emit('chat_message', options);
+      this.$socket.client.emit('chat_message', options);
       this.$store.dispatch("saveHistoryData", `\r\n${command}`);
       this.lastCommand = command;
       this.command = null;
@@ -97,6 +97,15 @@ export default {
       this.lastResponse = this.$store.getters.getSocketData;
     },
     continue(command) {
+      // if (this.lastCommand === "clear") {
+      //   this.$store.dispatch("deleteHistoryData");
+      //   this.command = "";
+      //   this.$store.dispatch(
+      //       "saveHistoryData",
+      //       ""
+      //     );
+      //   return;
+      // }
       if (this.lastCommand && this.lastCommand === "sspe list") {
         const pattern = new RegExp(`(?<=${command}:\\s)(.*?).*`, 'g');
         this.command = `sspe select --path ${this.lastResponse.match(pattern)}`;
@@ -116,7 +125,7 @@ export default {
         return true;
       } else if (this.lastCommand && this.lastCommand.includes("sspe ml --iter")) {
         if (command.toLowerCase() === 'y') {
-          this.command = this.lastCommand
+          this.command = this.lastCommand;
         } else {
           this.$store.dispatch(
             "saveHistoryData",
@@ -127,9 +136,13 @@ export default {
       return true;
     }
   },
-  // mounted() {
-  //   this.createListener();
-  // },
+  mounted() {
+    this.command = "connecting...";
+    setTimeout(() => {
+      this.$socket.client.connect();
+      this.command = "";
+    }, 3000)
+  },
   computed: {
     getHistoryData() {
       this.getSocketData();
@@ -148,6 +161,7 @@ export default {
   border-radius: 5px;
   background: #1D1F21;
   box-shadow: 0px 13px 17px -6px rgba(0, 0, 0, 0.38);
+  margin-bottom: 50px;
 }
 #terminal:hover {
   transform: translate3d(0, -10px, 0);

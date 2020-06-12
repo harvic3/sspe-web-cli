@@ -35,6 +35,7 @@ export default new Vuex.Store({
       state.responseHistory = `${state.responseHistory}${data}`;
     },
     DELETE_HISTORY(state) {
+      state.socket.data = "";
       state.responseHistory = "";
     }
   },

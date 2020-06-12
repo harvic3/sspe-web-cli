@@ -13,9 +13,6 @@ export default {
 </script>
 
 <style scoped >
-footer {
-  padding: 50px;
-}
 footer a {
   color: rgb(99, 217, 253);
 }
