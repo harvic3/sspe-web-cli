@@ -2,7 +2,7 @@
 
 > CLI Web application to process text files with numbers in seven-segment format in three lines. 
 
-> You can see this in <a href="https://sspe-cli-web.vickodev.now.sh/" target="_blank">Go to app</a>
+> You can see this in <a href="https://www.sspengine.ml" target="_blank">Go to app</a>
 
 ```console
 $ sspe showme
