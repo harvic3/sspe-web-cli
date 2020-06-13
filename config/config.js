@@ -1,15 +1,12 @@
-const environment = !process.env.NODE_ENV ? 'production' : process.env.NODE_ENV;
-console.log("env: ", environment);
-console.log("service: ", process.env.API_SERVICE);
+const environment = "production";
+const remoteService = environment == "production" ? "https://sspeapi.devspace.ml" : "http://localhost:7500";
+console.log("environment: ", environment);
 
 const settings = {
   env: environment,
-  api_service: environment == "development" 
-    ? "http://localhost:7500" 
-    : "https://sspeapi.devspace.ml",
+  api_service: remoteService,
+  remoteService: remoteService,
+  apikey: '-remote-sspe-cli-web-',
 };
-
-console.log("env: ", settings.env);
-console.log("service: ", settings.api_service);
 
 exports.config = settings;

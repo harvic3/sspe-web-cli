@@ -33,13 +33,13 @@ export default new Vuex.Store({
     },
     ADD_HISTORY(state, data) {
       state.responseHistory = `${state.responseHistory}${data}`;
-    },
+    },    
     DELETE_HISTORY(state) {
       state.socket.data = "";
       state.responseHistory = "";
-    }
+    },    
   },
-  actions: {
+  actions: {    
     saveHistoryData(context, data) {
       if (this.state.responseHistory !== "") {
         data = `\r\n${data}`;

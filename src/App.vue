@@ -36,6 +36,9 @@ export default {
     height: 26px!important;
     font-size: 13px!important;
   }
+  button {
+    padding: 0.5em 0.5em!important;
+  }
 }
 
 body {

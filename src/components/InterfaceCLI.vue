@@ -17,8 +17,26 @@
           v-model="command"
           autofocus="true"
           type="text"
-        >
-        <textarea disabled="true" class="console text-input" readonly="true" wrap="hard" v-model="getHistoryData"/>
+        />
+        <textarea
+          disabled="true"
+          class="console text-input"
+          readonly="true"
+          wrap="hard"
+          v-model="getHistoryData"
+        />
+        <div>
+          <button
+            class="connect pulse"
+            v-on:click="connectClient"
+            :disabled="$store.state.socket.isConnected"
+          >Connect</button>
+          <button
+            class="disconnect pulse"
+            v-on:click="disconnectClient"
+            :disabled="!$store.state.socket.isConnected"
+          >Disconnect</button>
+        </div>
       </div>
     </div>
   </div>
@@ -47,15 +65,30 @@ export default {
     },
     disconnect() {
       console.log("Socket disconnected");
-    },
+    }
   },
   methods: {
-    createListener() {
+    connectClient: function() {
+      if (this.$socket.client.disconnected) {
+        this.command = "connecting...";
+        setTimeout(() => {
+          this.$socket.client.connect();
+          this.command = "";
+        }, 2000);
+      }
+    },
+    disconnectClient: function() {
+      if (this.$socket.client.connected) {
+        this.$socket.client.disconnect();
+        console.log("diconnect action");
+      }
+    },
+    createListener: function() {
       this.$options.sockets.onmessage = data => {
         console.log("Listened: ", data);
       };
     },
-    rememberCommand(e) {
+    rememberCommand: function(e) {
       if (this.cursor === 0 && this.commandHistory.length === 1) {
         this.command = this.commandHistory[0];
         return;
@@ -72,15 +105,15 @@ export default {
         this.command = this.commandHistory[this.cursor];
       }
     },
-    sendBySocket(command) {
+    sendBySocket: function(command) {
       let options = command.replace("  ", " ");
       options = options.split(" ");
-      this.$socket.client.emit('chat_message', options);
+      this.$socket.client.emit("chat_message", options);
       this.$store.dispatch("saveHistoryData", `\r\n${command}`);
       this.lastCommand = command;
       this.command = null;
     },
-    sendCommand(e) {
+    sendCommand: function(e) {
       if (e.keyCode === 13) {
         this.commandHistory.push(this.command);
         if (this.$store.state.socket.isConnected) {
@@ -93,10 +126,10 @@ export default {
         }
       }
     },
-    getSocketData() {
+    getSocketData: function() {
       this.lastResponse = this.$store.getters.getSocketData;
     },
-    continue(command) {
+    continue: function(command) {
       // if (this.lastCommand === "clear") {
       //   this.$store.dispatch("deleteHistoryData");
       //   this.command = "";
@@ -107,7 +140,7 @@ export default {
       //   return;
       // }
       if (this.lastCommand && this.lastCommand === "sspe list") {
-        const pattern = new RegExp(`(?<=${command}:\\s)(.*?).*`, 'g');
+        const pattern = new RegExp(`(?<=${command}:\\s)(.*?).*`, "g");
         this.command = `sspe select --path ${this.lastResponse.match(pattern)}`;
         if (this.command.includes("CANCEL")) {
           this.$store.dispatch(
@@ -123,8 +156,11 @@ export default {
           return true;
         }
         return true;
-      } else if (this.lastCommand && this.lastCommand.includes("sspe ml --iter")) {
-        if (command.toLowerCase() === 'y') {
+      } else if (
+        this.lastCommand &&
+        this.lastCommand.includes("sspe ml --iter")
+      ) {
+        if (command.toLowerCase() === "y") {
           this.command = this.lastCommand;
         } else {
           this.$store.dispatch(
@@ -137,11 +173,7 @@ export default {
     }
   },
   mounted() {
-    this.command = "connecting...";
-    setTimeout(() => {
-      this.$socket.client.connect();
-      this.command = "";
-    }, 3000)
+    this.connectClient();
   },
   computed: {
     getHistoryData() {
@@ -159,7 +191,7 @@ export default {
   margin: 0 auto;
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   border-radius: 5px;
-  background: #1D1F21;
+  background: #1d1f21;
   box-shadow: 0px 13px 17px -6px rgba(0, 0, 0, 0.38);
   margin-bottom: 50px;
 }
@@ -188,13 +220,13 @@ export default {
 }
 .command {
   color: rgb(14, 216, 31);
-  background-color: #1D1F21;
+  background-color: #1d1f21;
   height: 30px;
   font-size: 18px;
 }
 .console {
   color: #fff;
-  background-color: #1D1F21;
+  background-color: #1d1f21;
   height: 45vh;
   margin-top: 5px;
   resize: none;
@@ -203,5 +235,30 @@ export default {
   border-width: 0;
   display: block;
   margin-bottom: 5px;
+}
+button {
+  background: none;
+  border: 2px solid;
+  font: inherit;
+  line-height: 1;
+  margin: 0.5em;
+  padding: 1em 1em;
+  width: 115px;
+}
+.connect {
+  color: #8fc866;
+}
+.disconnect {
+  color: #ff7f82;
+}
+button:hover,
+button:focus {
+  border-color: var(--hover);
+  color: #fff;
+}
+.pulse:hover,
+.pulse:focus {
+  animation: pulse 1s;
+  box-shadow: 0 0 0 2em rgba(#fff, 0);
 }
 </style>
