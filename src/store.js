@@ -3,7 +3,6 @@ import Vuex from "vuex";
 import { config } from "../config/config";
 
 Vue.use(Vuex);
-console.log('ENV: ', config.env);
 
 export default new Vuex.Store({
   state: {
