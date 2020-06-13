@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import { config } from "../config/config";
 
 Vue.use(Vuex);
+console.log('ENV: ', config.env);
 
 export default new Vuex.Store({
   state: {
@@ -12,7 +13,7 @@ export default new Vuex.Store({
       reconnectError: false,
       status: null,
     },
-    wsUrl: (config.env === 'PROD') ? config.PROD_SERVICE : config.DEV_SERVICE,
+    wsUrl: (config.env !== 'development') ? config.PROD_SERVICE : config.DEV_SERVICE,
     env: config.env,
     responseHistory: ""
   },

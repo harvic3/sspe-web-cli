@@ -16,7 +16,7 @@ Vue.use(VueSocketio, io(store.state.wsUrl,
   }
 );
 
-Vue.config.productionTip = store.state.env === "PROD" ? true : false;
+Vue.config.productionTip = store.state.env !== "development" ? true : false;
 
 new Vue({
   store: store,
