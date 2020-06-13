@@ -13,7 +13,7 @@ export default new Vuex.Store({
       reconnectError: false,
       status: null,
     },
-    wsUrl: (config.env !== 'development') ? config.PROD_SERVICE : config.DEV_SERVICE,
+    wsUrl: config.api_service,
     env: config.env,
     responseHistory: ""
   },

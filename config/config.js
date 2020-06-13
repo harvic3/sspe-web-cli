@@ -1,7 +1,10 @@
+const environment = process.env.NODE_ENV || 'development'; 
+
 const config = {
-  env: process.env.NODE_ENV || 'development',
-  DEV_SERVICE: "http://localhost:3030",
-  PROD_SERVICE: "https://sspeapi.devspace.ml"
+  env: environment,
+  api_service: environment == "development" || !process.env.API_SERVICE 
+    ? "http://localhost:7500" 
+    : process.env.API_SERVICE,
 };
 
 exports.config = config;
