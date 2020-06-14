@@ -19,6 +19,7 @@
           type="text"
         />
         <textarea
+          id="screenData"
           disabled="true"
           class="console text-input"
           readonly="true"
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+
 export default {
   name: "InterfaceCLI",
   data() {
@@ -51,7 +53,8 @@ export default {
       lastResponse: "",
       commandHistory: [],
       cursor: 0,
-      lastCommand: null
+      lastCommand: null,
+      countCommands: 0,
     };
   },
   props: {},
@@ -68,12 +71,15 @@ export default {
     }
   },
   methods: {
+    setTextHeightArea: function(textHeight) {
+      this.lastTextHeight = textHeight;
+    },
     connectClient: function() {
       if (this.$socket.client.disconnected) {
         this.command = "connecting...";
         setTimeout(() => {
           this.$socket.client.connect();
-          this.command = "";
+          this.command = null;
         }, 2000);
       }
     },
@@ -112,11 +118,21 @@ export default {
       this.$store.dispatch("saveHistoryData", `\r\n${command}`);
       this.lastCommand = command;
       this.command = null;
+      this.countCommands += this.countCommands;
+      this.calculateTextHeight();
     },
     sendCommand: function(e) {
       if (e.keyCode === 13) {
-        this.commandHistory.push(this.command);
         if (this.$store.state.socket.isConnected) {
+          this.screenText = this.$refs.screenData;
+          if (this.command === "clear") {
+            this.$store.dispatch("deleteHistoryData");
+            this.command = null;
+            this.$store.dispatch("saveHistoryData", "");
+            this.screenText.value = "";
+            return;
+          }
+          this.commandHistory.push(this.command);
           if (!this.continue(this.command)) {
             return;
           }
@@ -130,23 +146,16 @@ export default {
       this.lastResponse = this.$store.getters.getSocketData;
     },
     continue: function(command) {
-      // if (this.lastCommand === "clear") {
-      //   this.$store.dispatch("deleteHistoryData");
-      //   this.command = "";
-      //   this.$store.dispatch(
-      //       "saveHistoryData",
-      //       ""
-      //     );
-      //   return;
-      // }
       if (this.lastCommand && this.lastCommand === "sspe list") {
-        const pattern = new RegExp(`(?<=${command}:\\s)(.*?).*`, "g");
+        const pattern = new RegExp(`(?<=${this.command}:\\s)(.*?).*`, "g");
         this.command = `sspe select --path ${this.lastResponse.match(pattern)}`;
         if (this.command.includes("CANCEL")) {
           this.$store.dispatch(
             "saveHistoryData",
             `\r\nThe action was canceled!`
           );
+          this.command = "";
+          this.lastCommand = "";
           return false;
         } else if (command.includes("sspe ml --iter")) {
           this.$store.dispatch(
@@ -170,10 +179,18 @@ export default {
         }
       }
       return true;
+    },
+    calculateTextHeight: function() {
+      // console.log("Scroll top b: ", this.$refs.screenData.scrollTop, " - ", this.$refs.screenData.scrollHeight);
+      // this.$refs.screenData.scrollTop = this.$refs.screenData.scrollHeight + this.$refs.screenData.offsetHeight;
+      // console.log("Scroll top a: ", this.$refs.screenData.scrollTop, " - ", this.$refs.screenData.scrollHeight);
+      // this.lastTextHeight = this.$refs.screenData.scrollHeight;
     }
   },
   mounted() {
     this.connectClient();
+    // this.screenText = this.$refs.screenData;
+    // this.lastTextHeight = this.screenText.scrollHeight;
   },
   computed: {
     getHistoryData() {
