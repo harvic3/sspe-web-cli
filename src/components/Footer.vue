@@ -1,7 +1,8 @@
 <template>
   <footer calls="container-fluid text-center">
     By Vickodev |
-    <a href="https://github.com/harvic3" target="_blank">github</a> |
+    <a href="https://github.com/harvic3/sspe-project" target="_blank">project</a> |
+    <a href="https://github.com/harvic3/directory" target="_blank">github</a> |
     <a href="https://www.linkedin.com/in/vickodev/" target="_blank">linkedin</a>
   </footer>
 </template>
